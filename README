@@ -33,3 +33,53 @@ to run the automation script use a cron.
 
 00 */2 * * * /bin/bash /usr/home/bwirel/public_html/dxcluster/start-spotsucker.sh
 
+
+Installing Perl Modules:
+
+
+Telnet:
+cpan -I Net::Telnet
+
+Mysql:
+cpan -I DBD::mysql
+
+#Macos common problem
+
+Pproblem installing DBD::mysql
+
+I started by running (MacOX Mojave 10.14.1):
+
+brew install mysql
+cpanm install DBD::mysql
+This fails.
+This gave me the error message "Can't link/include C library 'ssl', 'crypto', aborting". As per this thread and the DBD::mysql install instructions on meta-cpan, this error is happening because the DBD::mysql package requires (?) "mysql-connector-c" rather than "mysql". Okay, I fixed that by doing:
+
+brew unlink mysql
+brew install mysql-connector-c
+cpan install DBD::mysql
+
+The cpan install still fails, but new error!
+
+That "fixed" the issue in that it got me a different error message. I was now getting the message: "Can't link/include C library'', aborting". Progress! Now I was getting the error on this answer. I fixed this error by:
+
+Verifying that my problem is indeed from missing linkage flags.
+
+Run mysql_config
+
+This returns something like: --libs [L/usr/local/Cellar/mysql-connector-c/6.1.11/lib -l]
+
+Note that the "-l" at the end has nothing after it, which is incorrect.
+
+Edit /usr/local/Cellar/mysql-connector-c/6.1.11/bin/mysql_config line #114
+
+Change libs="$libs -l" to libs="$libs -lmysqlclient"
+
+Verify that it worked: mysql_config
+
+This should return something like: --libs [L/usr/local/Cellar/mysql-connector-c/6.1.11/lib -lmysqlclient]
+
+Again do cpanm install DBD::mysql
+
+This time it works!!!
+Be wary: We're not installing the lib for SSL connections which will probably cause cryptic problems later.
+This got DBD::mysql installed successfully for me. I do think I'm going to have to go back and add some more linkage flags.
