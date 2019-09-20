@@ -7,8 +7,8 @@ use POSIX (strftime);
 $dbh = DBI->connect("DBI:mysql:database;host=localhost",'username','password')
         or die "Could not connect to MySQL database: " . DBI->errstr;
 
-$t = new Net::Telnet (Timeout => 30, Port => 8000, Prompt => '/./');
-$t->open("gb7mbc.net");
+$t = new Net::Telnet (Timeout => 30, Port => 7300, Prompt => '/./');
+$t->open("cluster-eu.dx-is.com");
 @lines = $t->cmd("callsign");
 print @lines;
 
