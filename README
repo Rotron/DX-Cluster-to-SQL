@@ -50,7 +50,7 @@ Pproblem installing DBD::mysql
 I started by running (MacOX Mojave 10.14.1):
 
 brew install mysql
-cpanm install DBD::mysql
+cpan install DBD::mysql
 This fails.
 This gave me the error message "Can't link/include C library 'ssl', 'crypto', aborting". As per this thread and the DBD::mysql install instructions on meta-cpan, this error is happening because the DBD::mysql package requires (?) "mysql-connector-c" rather than "mysql". Okay, I fixed that by doing:
 
